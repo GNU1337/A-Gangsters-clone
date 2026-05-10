@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { GameState, OrderType, Order, HoodStatus, Business, CityBlock } from '../game/types';
-import { ATTRIBUTE_LABELS, FRONT_COMPATIBILITY, RACKET_METRICS } from '../game/constants';
+import { ATTRIBUTE_LABELS, FRONT_COMPATIBILITY, RACKET_METRICS, UI_SETTINGS } from '../game/constants';
 import { FileText, Users, Newspaper, Briefcase, Map as MapIcon, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -25,8 +25,8 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
       <div className="bg-[#d2c2a4] shadow-inner relative flex flex-col border border-[#8a765a] overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-b from-black/10 to-transparent"></div>
         <div className="p-4 border-b border-[#8a765a] bg-[#e8dab5] flex justify-between items-end">
-          <h2 className="text-xl font-bold text-[#2b251d] uppercase leading-none font-serif">The Crew</h2>
-          <span className="text-[10px] text-[#5c4d3b] uppercase tracking-widest font-mono">{playerHoods.length} Active</span>
+          <h2 style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }} className="font-bold text-[#2b251d] uppercase leading-none font-serif">The Crew</h2>
+          <span style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="text-[#5c4d3b] uppercase tracking-widest font-mono">{playerHoods.length} Active</span>
         </div>
         
         <div className="flex-1 overflow-y-auto space-y-px custom-scrollbar bg-[#8a765a]">
@@ -37,13 +37,13 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
               className={`p-4 transition-all cursor-pointer border-b border-[#8a765a] ${state.selectedHoodId === hood.id ? 'bg-[#fff9e6] shadow-sm' : 'bg-[#f4ead5] hover:bg-[#fffcf0]'}`}
             >
               <div className="flex justify-between items-start mb-2">
-                <span className="font-black text-[#2b251d] leading-none text-sm uppercase">{hood.nickname}</span>
-                <span className={`text-[8px] font-bold px-1 rounded-sm uppercase ${hood.status === HoodStatus.IDLE ? 'bg-green-800 text-white' : 'bg-red-800 text-white'}`}>
+                <span style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }} className="font-black text-[#2b251d] leading-none uppercase">{hood.nickname}</span>
+                <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className={`font-bold px-1 rounded-sm uppercase ${hood.status === HoodStatus.IDLE ? 'bg-green-800 text-white' : 'bg-red-800 text-white'}`}>
                   {hood.status}
                 </span>
               </div>
-              <div className="text-[10px] italic text-[#5c4d3b] mb-3 border-b border-black/5 pb-1">{hood.name}</div>
-              <div className="grid grid-cols-4 gap-1 text-[9px] font-bold text-[#7a6a52] font-mono">
+              <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="italic text-[#5c4d3b] mb-3 border-b border-black/5 pb-1">{hood.name}</div>
+              <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="grid grid-cols-4 gap-1 font-bold text-[#7a6a52] font-mono">
                 {Object.entries(hood.attributes).map(([key, val]) => (
                   <div key={key} className="flex flex-col">
                     <span className="opacity-50 text-[7px] uppercase leading-none mb-1">{key.slice(0, 3)}</span>
@@ -177,9 +177,9 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
         {/* Newspaper */}
         <div className="flex-1 bg-white border border-[#ccc] flex flex-col p-4 shadow-[10px_10px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transform rotate-[0.5deg]">
           <div className="border-b-2 border-black text-center pb-2 mb-3">
-             <div className="text-[8px] border-b border-black/20 mb-1 py-0.5 tracking-tighter opacity-70">METROPOLITAN DAILY · EST. 1888</div>
-             <h4 className="font-black text-2xl uppercase italic tracking-tighter leading-none font-serif">The Morning Herald</h4>
-             <div className="flex justify-between text-[8px] font-bold border-t border-black/20 mt-1 pt-1 italic">
+             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="border-b border-black/20 mb-1 py-0.5 tracking-tighter opacity-70">METROPOLITAN DAILY · EST. 1888</div>
+             <h4 style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }} className="font-black uppercase italic tracking-tighter leading-none font-serif">The Morning Herald</h4>
+             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="flex justify-between font-bold border-t border-black/20 mt-1 pt-1 italic">
               <span>{state.weekDate.toUpperCase()} SPECIAL</span>
               <span>VOL. XXXIV</span>
              </div>
@@ -214,14 +214,14 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/dark-wood.png')]"></div>
           <div className="flex items-center gap-2 border-b border-white/10 pb-2 mb-3 relative z-10">
             <FileText size={14} className="text-[#d4af37]" />
-            <h2 className="text-[10px] uppercase tracking-widest font-black text-[#a89078] leading-none">Syndicate Relations</h2>
+            <h2 style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="uppercase tracking-widest font-black text-[#a89078] leading-none">Syndicate Relations</h2>
           </div>
           <div className="space-y-4 relative z-10 flex-1 overflow-y-auto custom-scrollbar-dark pr-1">
              {Object.values(state.gangs).filter(g => !g.isPlayer).map(gang => (
                <div key={gang.id} className="flex flex-col gap-1">
-                 <div className="flex justify-between items-end text-[10px] font-serif">
-                   <span className="text-[#d4af37] font-black uppercase tracking-tighter">{gang.name}</span>
-                   <span className={`text-[8px] font-black px-1 ${gang.intensity > 80 ? 'text-red-500' : 'text-green-500'}`}>
+                 <div className="flex justify-between items-end font-serif">
+                   <span style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="text-[#d4af37] font-black uppercase tracking-tighter">{gang.name}</span>
+                   <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className={`font-black px-1 ${gang.intensity > 80 ? 'text-red-500' : 'text-green-500'}`}>
                      {gang.intensity > 80 ? 'TENSE' : 'STABLE'}
                    </span>
                  </div>

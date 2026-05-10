@@ -60,3 +60,13 @@ export const VICTORY_CONDITIONS = {
   MAYOR: 'POLITICAL_CONTROL',
   DOMINATION: 'LAST_GANG_STANDING',
 };
+
+// Global UI Customization
+export const UI_SETTINGS = {
+  BASE_FONT_SIZE: '14px',    // Standard UI text size
+  HEADER_FONT_SIZE: '24px',  // Major heading size
+  SMALL_FONT_SIZE: '10px',   // Labels and small data
+  TINY_FONT_SIZE: '8px',     // Micro details
+  IS_BOLD: true,             // Toggle global bold weight
+  FONT_FAMILY: '"Crimson Pro", serif',
+};

@@ -9,6 +9,7 @@ import { generateInitialState, processWeekEnd } from './game/engine';
 import { processFBIChecks } from './game/heat';
 import PlanningPhase from './components/PlanningPhase';
 import WorkingWeek from './components/WorkingWeek';
+import { UI_SETTINGS } from './game/constants';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
@@ -43,15 +44,26 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#1a120b] text-[#a89078] overflow-hidden selection:bg-[#d4af37] selection:text-black font-serif border-8 border-[#2d1e12]">
+    <div 
+      className="h-screen w-full bg-[#1a120b] text-[#a89078] overflow-hidden selection:bg-[#d4af37] selection:text-black font-serif border-8 border-[#2d1e12]"
+      style={{ 
+        fontSize: UI_SETTINGS.BASE_FONT_SIZE,
+        fontWeight: UI_SETTINGS.IS_BOLD ? 'bold' : 'normal'
+      } as React.CSSProperties}
+    >
       {/* Top Bar / HUD */}
       <div className="fixed top-0 left-0 right-0 h-16 bg-[#120a06] border-b border-[#3d2b1d] flex items-center justify-between px-8 shadow-2xl z-50">
         <div className="flex items-center gap-6">
-          <h1 className="text-[#d4af37] text-2xl font-black uppercase tracking-widest opacity-80 italic">Gangsters</h1>
+          <h1 
+            style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }}
+            className="text-[#d4af37] font-black uppercase tracking-widest opacity-80 italic"
+          >
+            Gangsters
+          </h1>
           <div className="h-6 w-px bg-[#3d2b1d]"></div>
           <div className="flex flex-col">
-            <span className="text-[10px] uppercase tracking-tighter opacity-50 underline decoration-[#d4af37]/30 decoration-2 underline-offset-4 mb-0.5">District Dispatch</span>
-            <div className="text-xs uppercase tracking-tighter flex gap-4">
+            <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-tighter opacity-50 underline decoration-[#d4af37]/30 decoration-2 underline-offset-4 mb-0.5">District Dispatch</span>
+            <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="uppercase tracking-tighter flex gap-4">
               <span>{gameState.weekDate}</span>
               <span className="opacity-50">WEEK {gameState.turn}</span>
             </div>
@@ -67,13 +79,15 @@ export default function App() {
           <div className="flex gap-1 h-8">
             <button 
               onClick={() => togglePhase()}
-              className={`px-4 text-[10px] font-black uppercase transition-all duration-300 ${gameState.phase === GamePhase.PLANNING ? 'bg-[#d4af37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]' : 'text-[#a89078] hover:bg-[#3d2b1d]'}`}
+              style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }}
+              className={`px-4 font-black uppercase transition-all duration-300 ${gameState.phase === GamePhase.PLANNING ? 'bg-[#d4af37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]' : 'text-[#a89078] hover:bg-[#3d2b1d]'}`}
             >
               Planning
             </button>
             <button 
               onClick={() => togglePhase()}
-              className={`px-4 text-[10px] font-black uppercase transition-all duration-300 ${gameState.phase === GamePhase.WORKING ? 'bg-[#d4af37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]' : 'text-[#a89078] hover:bg-[#3d2b1d]'}`}
+              style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }}
+              className={`px-4 font-black uppercase transition-all duration-300 ${gameState.phase === GamePhase.WORKING ? 'bg-[#d4af37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]' : 'text-[#a89078] hover:bg-[#3d2b1d]'}`}
             >
               Working Week
             </button>
