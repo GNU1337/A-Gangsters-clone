@@ -45,27 +45,35 @@ export default function App() {
 
   return (
     <div 
-      className="h-screen w-full bg-[#1a120b] text-[#a89078] overflow-hidden selection:bg-[#d4af37] selection:text-black font-serif border-8 border-[#2d1e12]"
+      className="h-screen w-full overflow-hidden selection:bg-[#d4af37] selection:text-black font-serif border-8 border-[#2d1e12]"
       style={{ 
+        backgroundColor: UI_SETTINGS.BG_COLOR_DEEP, // Blacker background
+        color: UI_SETTINGS.TEXT_COLOR_GOLD,       // Gold text on black
         fontSize: UI_SETTINGS.BASE_FONT_SIZE,
-        fontWeight: UI_SETTINGS.IS_BOLD ? 'bold' : 'normal'
+        fontWeight: UI_SETTINGS.FONT_WEIGHT       // Bolder/Blacker weight
       } as React.CSSProperties}
     >
       {/* Top Bar / HUD */}
-      <div className="fixed top-0 left-0 right-0 h-16 bg-[#120a06] border-b border-[#3d2b1d] flex items-center justify-between px-8 shadow-2xl z-50">
+      <div 
+        className="fixed top-0 left-0 right-0 h-20 border-b border-[#3d2b1d] flex items-center justify-between px-10 shadow-2xl z-50 backdrop-blur-md"
+        style={{ backgroundColor: `${UI_SETTINGS.BG_COLOR_DEEP}cc` }}
+      >
         <div className="flex items-center gap-6">
           <h1 
-            style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }}
-            className="text-[#d4af37] font-black uppercase tracking-widest opacity-80 italic"
+            style={{ 
+              fontSize: UI_SETTINGS.HEADER_FONT_SIZE,
+              lineHeight: 0.8
+            }}
+            className="text-[#d4af37] font-black uppercase tracking-tighter italic"
           >
             Gangsters
           </h1>
-          <div className="h-6 w-px bg-[#3d2b1d]"></div>
+          <div className="h-10 w-px bg-[#3d2b1d]"></div>
           <div className="flex flex-col">
-            <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-tighter opacity-50 underline decoration-[#d4af37]/30 decoration-2 underline-offset-4 mb-0.5">District Dispatch</span>
-            <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="uppercase tracking-tighter flex gap-4">
+            <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-widest opacity-60 underline decoration-[#d4af37]/50 decoration-4 underline-offset-8 mb-1">Dispatch Intelligence</span>
+            <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="uppercase tracking-widest flex gap-6 font-black">
               <span>{gameState.weekDate}</span>
-              <span className="opacity-50">WEEK {gameState.turn}</span>
+              <span className="text-[#a89078] opacity-50">CYC {gameState.turn}</span>
             </div>
           </div>
         </div>

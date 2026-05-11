@@ -22,32 +22,35 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
     <div className="h-full w-full grid grid-cols-[320px_1fr_360px] gap-4 p-4 overflow-hidden bg-[#1a120b]">
       
       {/* Sidebar: Hoods & Crews */}
-      <div className="bg-[#d2c2a4] shadow-inner relative flex flex-col border border-[#8a765a] overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-b from-black/10 to-transparent"></div>
-        <div className="p-4 border-b border-[#8a765a] bg-[#e8dab5] flex justify-between items-end">
-          <h2 style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }} className="font-bold text-[#2b251d] uppercase leading-none font-serif">The Crew</h2>
-          <span style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="text-[#5c4d3b] uppercase tracking-widest font-mono">{playerHoods.length} Active</span>
+      <div 
+        className="shadow-inner relative flex flex-col border border-black/20 overflow-hidden"
+        style={{ backgroundColor: UI_SETTINGS.BG_COLOR_PAPER }}
+      >
+        <div className="absolute top-0 left-0 w-full h-4 bg-gradient-to-b from-black/20 to-transparent"></div>
+        <div className="p-6 border-b-2 border-black bg-[#e8dab5] flex justify-between items-end">
+          <h2 style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE, lineHeight: 0.8 }} className="font-black text-black uppercase font-serif">The Crew</h2>
+          <span style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="text-black/60 uppercase tracking-widest font-mono font-black">{playerHoods.length} Active</span>
         </div>
         
-        <div className="flex-1 overflow-y-auto space-y-px custom-scrollbar bg-[#8a765a]">
+        <div className="flex-1 overflow-y-auto space-y-1 custom-scrollbar bg-black/5 p-1">
           {playerHoods.map(hood => (
             <div 
               key={hood.id} 
               onClick={() => setState(p => ({ ...p, selectedHoodId: hood.id }))}
-              className={`p-4 transition-all cursor-pointer border-b border-[#8a765a] ${state.selectedHoodId === hood.id ? 'bg-[#fff9e6] shadow-sm' : 'bg-[#f4ead5] hover:bg-[#fffcf0]'}`}
+              className={`p-6 transition-all cursor-pointer border-2 shadow-sm ${state.selectedHoodId === hood.id ? 'bg-white border-black scale-[1.02] z-10' : 'bg-[#fffcf0] border-transparent hover:border-black/20'}`}
             >
               <div className="flex justify-between items-start mb-2">
-                <span style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }} className="font-black text-[#2b251d] leading-none uppercase">{hood.nickname}</span>
-                <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className={`font-bold px-1 rounded-sm uppercase ${hood.status === HoodStatus.IDLE ? 'bg-green-800 text-white' : 'bg-red-800 text-white'}`}>
+                <span style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }} className="font-black text-black leading-none uppercase tracking-tighter">{hood.nickname}</span>
+                <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className={`font-black px-2 py-0.5 rounded-sm uppercase ${hood.status === HoodStatus.IDLE ? 'bg-green-800 text-white' : 'bg-red-800 text-white'}`}>
                   {hood.status}
                 </span>
               </div>
-              <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="italic text-[#5c4d3b] mb-3 border-b border-black/5 pb-1">{hood.name}</div>
-              <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="grid grid-cols-4 gap-1 font-bold text-[#7a6a52] font-mono">
+              <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="italic text-black/50 mb-4 border-b border-black/10 pb-2 font-black">{hood.name}</div>
+              <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="grid grid-cols-4 gap-2 font-black text-black/70 font-mono">
                 {Object.entries(hood.attributes).map(([key, val]) => (
-                  <div key={key} className="flex flex-col">
-                    <span className="opacity-50 text-[7px] uppercase leading-none mb-1">{key.slice(0, 3)}</span>
-                    <span className="text-[#2b251d]">{val}</span>
+                  <div key={key} className="flex flex-col bg-black/5 p-1">
+                    <span className="opacity-40 text-[9px] uppercase leading-none mb-1 font-black">{key.slice(0, 3)}</span>
+                    <span className="text-black font-black">{val}</span>
                   </div>
                 ))}
               </div>
@@ -175,25 +178,25 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
       {/* Right Sidebar: Newspaper & Reports */}
       <div className="flex flex-col gap-4">
         {/* Newspaper */}
-        <div className="flex-1 bg-white border border-[#ccc] flex flex-col p-4 shadow-[10px_10px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transform rotate-[0.5deg]">
-          <div className="border-b-2 border-black text-center pb-2 mb-3">
-             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="border-b border-black/20 mb-1 py-0.5 tracking-tighter opacity-70">METROPOLITAN DAILY · EST. 1888</div>
-             <h4 style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE }} className="font-black uppercase italic tracking-tighter leading-none font-serif">The Morning Herald</h4>
-             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="flex justify-between font-bold border-t border-black/20 mt-1 pt-1 italic">
-              <span>{state.weekDate.toUpperCase()} SPECIAL</span>
-              <span>VOL. XXXIV</span>
+        <div className="flex-1 bg-white border-4 border-black flex flex-col p-8 shadow-[20px_20px_40px_rgba(0,0,0,0.5)] relative overflow-hidden transform rotate-[0.5deg]">
+          <div className="border-b-4 border-black text-center pb-4 mb-6">
+             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="border-b-2 border-black mb-2 py-1 tracking-[0.2em] font-black opacity-80 uppercase text-black">METROPOLITAN DAILY · EST. 1888</div>
+             <h4 style={{ fontSize: '64px', lineHeight: 0.8 }} className="font-black uppercase italic tracking-tighter font-serif text-black">The Morning Herald</h4>
+             <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="flex justify-between font-black border-t-2 border-black mt-2 pt-2 italic text-black">
+              <span>{state.weekDate.toUpperCase()} LATE EDITION</span>
+              <span>VOL. XXXIV · NO. 241</span>
              </div>
           </div>
-          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar-newspaper space-y-4">
+          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar-newspaper space-y-6">
             {events.length > 0 ? (
               <>
-                <div className="text-[12px] font-black leading-tight text-center underline decoration-dotted underline-offset-2 mb-4 text-[#bc4749]">
-                  {events[0].message.toUpperCase()}
+                <div style={{ fontSize: '32px', lineHeight: 1 }} className="font-black leading-none text-center underline decoration-4 decoration-black underline-offset-4 mb-8 text-black uppercase tracking-tighter">
+                  {events[0].message}
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-6">
                   {events.slice(1, 5).map(event => (
-                    <div key={event.id} className="border-b border-black/5 pb-2 last:border-0">
-                      <p className="font-serif text-[11px] leading-tight text-justify opacity-80 first-letter:text-xl first-letter:font-black first-letter:float-left first-letter:mr-1 first-letter:mt-1">
+                    <div key={event.id} className="border-b-2 border-black/10 pb-4 last:border-0">
+                      <p style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }} className="font-serif leading-tight text-justify text-black font-black italic opacity-90 first-letter:text-6xl first-letter:font-black first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-black">
                         {event.message}
                       </p>
                     </div>
@@ -201,12 +204,13 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
                 </div>
               </>
             ) : (
-              <div className="opacity-20 flex flex-col items-center justify-center h-full gap-2 grayscale">
-                <Newspaper size={48} strokeWidth={1} />
-                <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Scanning Wire...</span>
+              <div className="opacity-10 flex flex-col items-center justify-center h-full gap-2 grayscale">
+                <Newspaper size={64} strokeWidth={2} className="text-black" />
+                <span className="text-[12px] uppercase font-black tracking-[0.4em] text-black">Scanning Wire...</span>
               </div>
             )}
           </div>
+          <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
         </div>
 
         {/* Diplomacy Ledger */}

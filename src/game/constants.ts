@@ -63,10 +63,15 @@ export const VICTORY_CONDITIONS = {
 
 // Global UI Customization
 export const UI_SETTINGS = {
-  BASE_FONT_SIZE: '14px',    // Standard UI text size
-  HEADER_FONT_SIZE: '24px',  // Major heading size
-  SMALL_FONT_SIZE: '10px',   // Labels and small data
-  TINY_FONT_SIZE: '8px',     // Micro details
-  IS_BOLD: true,             // Toggle global bold weight
+  BASE_FONT_SIZE: '18px',    // Increased for "bigger"
+  HEADER_FONT_SIZE: '48px',  // Dramatically increased for "bigger"
+  SMALL_FONT_SIZE: '14px',   // Increased for "bigger"
+  TINY_FONT_SIZE: '11px',    // Increased for "bigger"
+  IS_BOLD: true,             
+  FONT_WEIGHT: '900',        // "Bolder" - Black weight
+  TEXT_COLOR_BLACK: '#000000', // "Blacker" literal ink
+  TEXT_COLOR_GOLD: '#d4af37',
+  BG_COLOR_DEEP: '#000000',    // Deeper blacks
+  BG_COLOR_PAPER: '#f4ead5',
   FONT_FAMILY: '"Crimson Pro", serif',
 };

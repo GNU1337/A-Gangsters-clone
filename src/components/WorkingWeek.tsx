@@ -6,7 +6,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GameState, GamePhase, Hood, HoodStatus, OrderType } from '../game/types';
 import { moveHood } from '../game/engine';
+import { UI_SETTINGS } from '../game/constants';
 import { Play, Pause, FastForward, Info, AlertTriangle, Crosshair } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface WorkingWeekProps {
   state: GameState;
@@ -176,10 +178,13 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
       if (hood.status === HoodStatus.ON_ORDER) ctx.stroke();
       
       // Label
-      ctx.font = 'bold 10px font-serif';
-      ctx.fillStyle = isPlayer ? '#d4af37' : '#bc4749';
+      ctx.font = `black 14px ${UI_SETTINGS.FONT_FAMILY}`;
+      ctx.fillStyle = isPlayer ? UI_SETTINGS.TEXT_COLOR_GOLD : '#bc4749';
       ctx.textAlign = 'center';
-      ctx.fillText(hood.nickname.toUpperCase(), p.x, p.y - 10);
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 4;
+      ctx.fillText(hood.nickname.toUpperCase(), p.x, p.y - 12);
+      ctx.shadowBlur = 0;
     });
 
     ctx.restore();
@@ -198,25 +203,32 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
       </div>
 
       {/* Floating Alerts Container */}
-      <div className="absolute top-8 left-8 w-72 flex flex-col gap-3 z-20 pointer-events-none">
+      <div className="absolute top-12 left-12 w-96 flex flex-col gap-4 z-20 pointer-events-none">
         <AnimatePresence>
           {state.history.slice(-3).reverse().map(event => (
             <motion.div 
               key={event.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: -40, scale: 0.8 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-[#f4ead5] border-l-4 border-l-[#bc4749] p-3 shadow-[5px_5px_15px_rgba(0,0,0,0.5)] pointer-events-auto"
+              className="p-5 shadow-[10px_10px_30px_rgba(0,0,0,0.8)] pointer-events-auto border-l-[12px]"
+              style={{ 
+                backgroundColor: UI_SETTINGS.BG_COLOR_PAPER,
+                borderLeftColor: event.type === 'alert' ? '#bc4749' : '#1e3a8a'
+              }}
             >
-              <div className="flex items-center justify-between gap-2 mb-1 border-b border-black/10 pb-1">
-                <div className="flex items-center gap-1.5">
-                  {event.type === 'alert' ? <AlertTriangle size={10} className="text-[#bc4749]" /> : <Info size={10} className="text-blue-900" />}
-                  <span className="text-[9px] uppercase font-black tracking-widest text-black/60">{event.type} dispatch</span>
+              <div className="flex items-center justify-between gap-2 mb-2 border-b-2 border-black/20 pb-2">
+                <div className="flex items-center gap-2">
+                  {event.type === 'alert' ? <AlertTriangle size={14} className="text-[#bc4749]" /> : <Info size={14} className="text-blue-900" />}
+                  <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase font-black tracking-[0.2em] text-black/60">{event.type} report</span>
                 </div>
-                <span className="text-[8px] font-mono text-black/40">T-{ticker % 1000}</span>
+                <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="font-mono text-black/40 font-black">LOG: {ticker % 1000}</span>
               </div>
-              <p className="font-serif text-[12px] leading-tight text-[#2b251d] font-bold italic">
-                {event.message}
+              <p 
+                style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }}
+                className="font-serif leading-none text-black font-black italic tracking-tighter"
+              >
+                "{event.message}"
               </p>
             </motion.div>
           ))}
@@ -224,44 +236,48 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
       </div>
 
       {/* Control Bar - Editorial Style */}
-      <div className="h-16 bg-[#120a06] border-t border-[#3d2b1d] flex items-center justify-between px-8 z-30 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-2 bg-[#261810] p-1 rounded border border-[#3d2b1d]">
+      <div 
+        className="h-24 border-t-2 border-black flex items-center justify-between px-12 z-30 shadow-[0_-20px_50px_rgba(0,0,0,1)]"
+        style={{ backgroundColor: UI_SETTINGS.BG_COLOR_DEEP }}
+      >
+        <div className="flex items-center gap-12">
+          <div className="flex items-center gap-3 bg-white/5 p-2 rounded-sm border border-white/10">
              <button 
                onClick={() => setState(p => ({ ...p, isPaused: !p.isPaused }))}
-               className={`p-2 transition-all ${state.isPaused ? 'text-[#d4af37] bg-[#d4af37]/10' : 'text-[#a89078] hover:text-[#d4af37]'}`}
+               className={`p-3 transition-all ${state.isPaused ? 'text-[#d4af37] bg-[#d4af37]/20 scale-110' : 'text-white/40 hover:text-white'}`}
              >
-               {state.isPaused ? <Play size={18} fill="currentColor" /> : <Pause size={18} fill="currentColor" />}
+               {state.isPaused ? <Play size={24} fill="currentColor" /> : <Pause size={24} fill="currentColor" />}
              </button>
-             <div className="w-px h-6 bg-[#3d2b1d]" />
+             <div className="w-px h-8 bg-white/10" />
              <button 
                onClick={() => setState(p => ({ ...p, simulationSpeed: p.simulationSpeed === 1 ? 2 : 1 }))}
-               className={`p-2 transition-all ${state.simulationSpeed > 1 ? 'text-[#d4af37] bg-[#d4af37]/10' : 'text-[#a89078] hover:text-[#d4af37]'}`}
+               className={`p-3 transition-all ${state.simulationSpeed > 1 ? 'text-[#d4af37] bg-[#d4af37]/20 scale-110' : 'text-white/40 hover:text-white'}`}
              >
-               <FastForward size={18} fill={state.simulationSpeed > 1 ? "currentColor" : "none"} />
+               <FastForward size={24} fill={state.simulationSpeed > 1 ? "currentColor" : "none"} />
              </button>
           </div>
 
-          <div className="flex flex-col border-l border-[#3d2b1d] pl-8">
-            <span className="text-[8px] uppercase tracking-widest font-black text-[#a89078]/40 mb-1">Chronometer</span>
-            <span className="text-sm font-mono text-[#d4af37] leading-none uppercase">08:00 AM · MONDAY</span>
+          <div className="flex flex-col border-l-4 border-[#3d2b1d] pl-10">
+            <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-[0.3em] font-black text-[#a89078]/60 mb-2">Simulation Chronology</span>
+            <span style={{ fontSize: UI_SETTINGS.HEADER_FONT_SIZE, lineHeight: 0.8 }} className="font-mono text-[#d4af37] uppercase font-black">08:00 AM · MON</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-10">
            <div className="flex flex-col text-right">
-             <span className="text-[8px] uppercase tracking-widest font-black text-[#a89078]/40 mb-1">Simulation state</span>
-             <div className="flex items-center gap-2 justify-end">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                <span className="text-[10px] font-black uppercase text-[#d4af37]">Live Feed</span>
+             <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-[0.3em] font-black text-[#a89078]/60 mb-2">Network status</span>
+             <div className="flex items-center gap-3 justify-end">
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.8)]"></div>
+                <span style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="font-black uppercase text-[#d4af37] tracking-widest">Live Pulse</span>
              </div>
            </div>
 
            <button 
             onClick={onEndWeek}
-            className="px-6 py-2 bg-[#bc4749] text-white text-[10px] uppercase font-black tracking-[0.2em] hover:bg-[#a53a3c] transition-all shadow-[0_0_20px_rgba(188,71,73,0.3)] border border-white/10"
+            style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }}
+            className="px-10 py-4 bg-[#bc4749] text-white uppercase font-black tracking-[0.3em] hover:bg-[#a53a3c] transition-all shadow-[0_0_40px_rgba(188,71,73,0.4)] border-2 border-white/20 active:scale-95"
            >
-             Halt Working Week
+             Halt Operations
            </button>
         </div>
       </div>
