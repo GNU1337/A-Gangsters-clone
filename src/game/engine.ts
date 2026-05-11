@@ -120,6 +120,8 @@ export function generateInitialState(): GameState {
     fbiPressure: 5,
     simulationSpeed: 1,
     isPaused: false,
+    showTutorial: true,
+    tutorialStep: 0,
     history: [{
       id: 'initial',
       turn: 1,

@@ -9,8 +9,10 @@ import { generateInitialState, processWeekEnd } from './game/engine';
 import { processFBIChecks } from './game/heat';
 import PlanningPhase from './components/PlanningPhase';
 import WorkingWeek from './components/WorkingWeek';
+import TutorialOverlay from './components/TutorialOverlay';
 import { UI_SETTINGS } from './game/constants';
 import { motion, AnimatePresence } from 'motion/react';
+import { HelpCircle } from 'lucide-react';
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState>(() => generateInitialState());
@@ -79,9 +81,22 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-6 bg-[#261810]/50 p-1 rounded border border-[#3d2b1d]/50">
-          <div className="flex gap-4 px-4 font-mono">
-            <span className="text-green-500/90 text-sm font-bold tracking-tight">${(playerGang.legalMoney / 64).toLocaleString()}</span>
-            <span className="text-red-500/90 text-sm font-bold tracking-tight">${(playerGang.money / 64).toLocaleString()}</span>
+          <div className="flex gap-6 px-4 font-mono items-center">
+            <div className="flex flex-col">
+              <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="text-green-500/50 uppercase font-black">Clean</span>
+              <span className="text-green-500/90 text-sm font-bold tracking-tight">${(playerGang.legalMoney / 64).toLocaleString()}</span>
+            </div>
+            <div className="flex flex-col">
+              <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="text-red-500/50 uppercase font-black">Blood</span>
+              <span className="text-red-500/90 text-sm font-bold tracking-tight">${(playerGang.money / 64).toLocaleString()}</span>
+            </div>
+            <button 
+              onClick={() => setGameState(p => ({ ...p, showTutorial: true, tutorialStep: 0 }))}
+              className="flex items-center gap-2 text-[#d4af37] hover:text-white transition-colors"
+            >
+              <HelpCircle size={18} />
+              <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase font-black border-b border-current">Intel</span>
+            </button>
           </div>
           
           <div className="flex gap-1 h-8">
@@ -133,6 +148,17 @@ export default function App() {
       <div className="fixed inset-0 pointer-events-none z-[100] opacity-40 mix-blend-overlay">
         <div className="absolute inset-0 bg-[#000] [mask-image:radial-gradient(ellipse_at_center,transparent_0%,black_100%)]"></div>
       </div>
+
+      <AnimatePresence>
+        {gameState.showTutorial && (
+          <TutorialOverlay 
+            currentStep={gameState.tutorialStep}
+            onClose={() => setGameState(p => ({ ...p, showTutorial: false }))}
+            onNext={() => setGameState(p => ({ ...p, tutorialStep: p.tutorialStep + 1 }))}
+            onPrev={() => setGameState(p => ({ ...p, tutorialStep: Math.max(0, p.tutorialStep - 1) }))}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

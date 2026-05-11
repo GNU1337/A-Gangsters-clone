@@ -71,6 +71,7 @@ export const UI_SETTINGS = {
   FONT_WEIGHT: '900',        // "Bolder" - Black weight
   TEXT_COLOR_BLACK: '#000000', // "Blacker" literal ink
   TEXT_COLOR_GOLD: '#d4af37',
+  ACCENT_GREEN: '#00ff41',    // "Green Bright" - Classic terminal green
   BG_COLOR_DEEP: '#000000',    // Deeper blacks
   BG_COLOR_PAPER: '#f4ead5',
   FONT_FAMILY: '"Crimson Pro", serif',

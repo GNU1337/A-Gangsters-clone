@@ -130,7 +130,11 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
                       return { ...p, orders: { ...p.orders, [orderId]: order }, hoods: nextHoods };
                     });
                   }}
-                  className="text-[9px] h-8 uppercase font-bold border border-[#2b251d]/20 hover:bg-[#2b251d] hover:text-[#e8dab5] disabled:opacity-20 transition-all flex items-center justify-center shadow-sm"
+                  className="text-[11px] h-10 uppercase font-black border-2 border-black hover:scale-105 active:scale-95 disabled:opacity-20 transition-all flex items-center justify-center shadow-[4px_4px_0px_black] active:shadow-none translate-y-[-2px] active:translate-y-[2px]"
+                  style={{ 
+                    backgroundColor: UI_SETTINGS.ACCENT_GREEN,
+                    color: '#000',
+                  }}
                 >
                   {type.replace('_', ' ')}
                 </button>

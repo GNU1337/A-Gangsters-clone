@@ -124,6 +124,8 @@ export interface GameState {
   selectedBlockId?: string;
   simulationSpeed: number;
   isPaused: boolean;
+  showTutorial: boolean;
+  tutorialStep: number;
   history: GameEvent[];
 }
 
