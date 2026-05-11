@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <div 
-      className="h-screen w-full overflow-hidden selection:bg-[#d4af37] selection:text-black font-serif border-8 border-[#2d1e12]"
+      className="min-h-screen w-full flex flex-col selection:bg-[#d4af37] selection:text-black font-serif border-4 md:border-8 border-[#2d1e12] overflow-x-hidden"
       style={{ 
         backgroundColor: UI_SETTINGS.BG_COLOR_DEEP, // Blacker background
         color: UI_SETTINGS.TEXT_COLOR_GOLD,       // Gold text on black
@@ -57,7 +57,7 @@ export default function App() {
     >
       {/* Top Bar / HUD */}
       <div 
-        className="fixed top-0 left-0 right-0 h-20 border-b border-[#3d2b1d] flex items-center justify-between px-10 shadow-2xl z-50 backdrop-blur-md"
+        className="sticky top-0 left-0 right-0 h-auto min-h-[5rem] border-b border-[#3d2b1d] flex flex-col md:flex-row items-center justify-between px-4 md:px-10 py-4 md:py-0 shadow-2xl z-50 backdrop-blur-md gap-4"
         style={{ backgroundColor: `${UI_SETTINGS.BG_COLOR_DEEP}cc` }}
       >
         <div className="flex items-center gap-6">
@@ -126,7 +126,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="h-full w-full pt-16"
+            className="flex-1 w-full"
           >
             <PlanningPhase state={gameState} setState={updateState} />
           </motion.div>
@@ -137,7 +137,7 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
-            className="h-full w-full pt-16"
+            className="flex-1 w-full"
           >
             <WorkingWeek state={gameState} setState={updateState} onEndWeek={togglePhase} />
           </motion.div>

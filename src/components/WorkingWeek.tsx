@@ -191,9 +191,9 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
   }, [ticker, state.hoods, state.playerGang]);
 
   return (
-    <div className="h-full w-full relative flex flex-col overflow-hidden bg-[#0c0805]">
+    <div className="min-h-full w-full relative flex flex-col overflow-hidden bg-[#0c0805]">
       {/* Map Viewport Area */}
-      <div ref={containerRef} className="flex-1 cursor-crosshair relative">
+      <div ref={containerRef} className="h-64 sm:h-96 md:flex-1 cursor-crosshair relative min-h-[300px]">
         <canvas ref={canvasRef} className="opacity-90" />
         
         {/* Cinematic Overlays */}
@@ -203,7 +203,7 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
       </div>
 
       {/* Floating Alerts Container */}
-      <div className="absolute top-12 left-12 w-96 flex flex-col gap-4 z-20 pointer-events-none">
+      <div className="absolute top-4 md:top-12 left-4 md:left-12 right-4 md:right-auto w-auto md:w-96 flex flex-col gap-4 z-20 pointer-events-none">
         <AnimatePresence>
           {state.history.slice(-3).reverse().map(event => (
             <motion.div 
@@ -237,10 +237,10 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
 
       {/* Control Bar - Editorial Style */}
       <div 
-        className="h-24 border-t-2 border-black flex items-center justify-between px-12 z-30 shadow-[0_-20px_50px_rgba(0,0,0,1)]"
+        className="h-auto md:h-24 border-t-2 border-black flex flex-col md:flex-row items-center justify-between px-4 md:px-12 py-6 md:py-0 z-30 shadow-[0_-20px_50px_rgba(0,0,0,1)] gap-6"
         style={{ backgroundColor: UI_SETTINGS.BG_COLOR_DEEP }}
       >
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-6 md:gap-12 w-full md:w-auto justify-between md:justify-start">
           <div className="flex items-center gap-3 bg-white/5 p-2 rounded-sm border border-white/10">
              <button 
                onClick={() => setState(p => ({ ...p, isPaused: !p.isPaused }))}
@@ -263,7 +263,7 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
           </div>
         </div>
 
-        <div className="flex items-center gap-10">
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 md:gap-10 w-full md:w-auto">
            <div className="flex flex-col text-right">
              <span style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="uppercase tracking-[0.3em] font-black text-[#a89078]/60 mb-2">Network status</span>
              <div className="flex items-center gap-3 justify-end">

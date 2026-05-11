@@ -19,11 +19,11 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
   const events = state.history.slice(-10).reverse();
 
   return (
-    <div className="h-full w-full grid grid-cols-[320px_1fr_360px] gap-4 p-4 overflow-hidden bg-[#1a120b]">
+    <div className="min-h-full w-full grid lg:grid-cols-[320px_1fr_360px] grid-cols-1 gap-4 p-4 bg-[#1a120b]">
       
       {/* Sidebar: Hoods & Crews */}
       <div 
-        className="shadow-inner relative flex flex-col border border-black/20 overflow-hidden"
+        className="shadow-inner relative flex flex-col border border-black/20 overflow-hidden h-96 lg:h-full"
         style={{ backgroundColor: UI_SETTINGS.BG_COLOR_PAPER }}
       >
         <div className="absolute top-0 left-0 w-full h-4 bg-gradient-to-b from-black/20 to-transparent"></div>
@@ -123,8 +123,8 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
         </div>
 
         {/* Action Panel */}
-        <div className="h-64 flex gap-4">
-          <div className="flex-1 bg-[#d2c2a4] text-[#2b251d] p-4 shadow-xl border border-[#8a765a] flex flex-col font-serif relative">
+        <div className="flex flex-col md:flex-row gap-4 h-auto md:h-64 mb-4 lg:mb-0">
+          <div className="flex-1 bg-[#d2c2a4] text-[#2b251d] p-4 shadow-xl border border-[#8a765a] flex flex-col font-serif relative min-h-[16rem]">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-b from-black/5 to-transparent"></div>
             <div className="flex items-center gap-2 border-b border-[#2b251d]/10 pb-2 mb-3">
               <Briefcase size={14} className="opacity-70" />
@@ -167,7 +167,7 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
             </div>
           </div>
 
-          <div className="w-[180px] bg-[#f2e8cf] border border-[#8a765a] p-3 shadow-xl flex flex-col gap-2 relative">
+          <div className="w-full md:w-[180px] bg-[#f2e8cf] border border-[#8a765a] p-3 shadow-xl flex flex-col gap-2 relative min-h-[10rem]">
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-b from-black/5 to-transparent"></div>
             <div className="text-[9px] uppercase font-black border-b border-[#2b251d]/10 pb-1 mb-1 text-[#2b251d] tracking-widest">Territory Info</div>
             {state.selectedBlockId ? (
@@ -207,7 +207,7 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
       {/* Right Sidebar: Newspaper & Reports */}
       <div className="flex flex-col gap-4">
         {/* Newspaper */}
-        <div className="flex-1 bg-white border-4 border-black flex flex-col p-8 shadow-[20px_20px_40px_rgba(0,0,0,0.5)] relative overflow-hidden transform rotate-[0.5deg]">
+        <div className="flex-1 min-h-[40rem] bg-white border-4 border-black flex flex-col p-8 shadow-[20px_20px_40px_rgba(0,0,0,0.5)] relative overflow-hidden transform lg:rotate-[0.5deg]">
           <div className="border-b-4 border-black text-center pb-4 mb-6">
              <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="border-b-2 border-black mb-2 py-1 tracking-[0.2em] font-black opacity-80 uppercase text-black">METROPOLITAN DAILY · EST. 1888</div>
              <h4 style={{ fontSize: '64px', lineHeight: 0.8 }} className="font-black uppercase italic tracking-tighter font-serif text-black">The Morning Herald</h4>
