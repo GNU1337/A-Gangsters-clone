@@ -79,17 +79,37 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
           
           <div className="flex-1 flex items-center justify-center relative z-10">
             <div className="grid grid-cols-16 grid-rows-16 w-full max-w-[500px] aspect-square border border-white/20 bg-black/40 ring-1 ring-white/5">
-              {Object.values(state.city).map(block => (
-                <div 
-                  key={block.id}
-                  onClick={() => setState(p => ({ ...p, selectedBlockId: block.id }))}
-                  className={`border-[0.5px] border-white/5 cursor-pointer transition-all hover:bg-[#d4af37]/20 ${state.selectedBlockId === block.id ? 'bg-[#d4af37]/30 ring-1 ring-inset ring-[#d4af37]' : ''}`}
-                  style={{
-                    backgroundColor: block.type === 'industrial' ? 'rgba(212,175,55,0.05)' : 
-                                    block.type === 'residential' ? 'rgba(168,144,120,0.05)' : 'transparent'
-                  }}
-                />
-              ))}
+              {Object.values(state.city).map(block => {
+                const isPlayerOwned = block.businesses.some(bId => state.businesses[bId]?.ownerId === state.playerGang);
+                const activeMission = Object.values(state.orders).find(o => o.targetId === block.id && o.status === 'pending');
+                
+                return (
+                  <div 
+                    key={block.id}
+                    onClick={() => setState(p => ({ ...p, selectedBlockId: block.id }))}
+                    className={`border-[0.5px] border-white/5 cursor-pointer transition-all hover:border-[#d4af37]/40 relative group ${state.selectedBlockId === block.id ? 'bg-[#d4af37]/30 ring-2 ring-inset ring-[#d4af37] z-20' : ''}`}
+                    style={{
+                      backgroundColor: isPlayerOwned ? `${UI_SETTINGS.ACCENT_GREEN}33` : 
+                                      block.type === 'industrial' ? 'rgba(212,175,55,0.05)' : 
+                                      block.type === 'residential' ? 'rgba(168,144,120,0.05)' : 'transparent'
+                    }}
+                  >
+                    {/* Controlled Territory Glow */}
+                    {isPlayerOwned && (
+                      <div className="absolute inset-0 bg-[#00ff41]/5 blur-[2px] pointer-events-none"></div>
+                    )}
+                    
+                    {/* Active Mission Pulse */}
+                    {activeMission && (
+                      <motion.div 
+                        animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.8, 1.1, 0.8] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                        className="absolute inset-0 bg-[#bc4749] border border-white/40 shadow-[0_0_10px_rgba(188,71,73,0.5)] z-10"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -111,34 +131,39 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
               <h2 className="text-[10px] uppercase tracking-widest font-black leading-none">Weekly Directives</h2>
             </div>
             <div className="grid grid-cols-2 gap-2 overflow-y-auto pr-1 custom-scrollbar-dark">
-              {Object.values(OrderType).map(type => (
-                <button 
-                  key={type}
-                  disabled={!state.selectedHoodId || !state.selectedBlockId}
-                  onClick={() => {
-                    const orderId = `order-${Date.now()}`;
-                    const order: Order = {
-                      id: orderId,
-                      type,
-                      targetId: state.selectedBlockId!,
-                      hoodId: state.selectedHoodId!,
-                      status: 'pending'
-                    };
-                    setState(p => {
-                      const nextHoods = { ...p.hoods };
-                      nextHoods[state.selectedHoodId!] = { ...nextHoods[state.selectedHoodId!], status: HoodStatus.ON_ORDER, currentOrderId: orderId };
-                      return { ...p, orders: { ...p.orders, [orderId]: order }, hoods: nextHoods };
-                    });
-                  }}
-                  className="text-[11px] h-10 uppercase font-black border-2 border-black hover:scale-105 active:scale-95 disabled:opacity-20 transition-all flex items-center justify-center shadow-[4px_4px_0px_black] active:shadow-none translate-y-[-2px] active:translate-y-[2px]"
-                  style={{ 
-                    backgroundColor: UI_SETTINGS.ACCENT_GREEN,
-                    color: '#000',
-                  }}
-                >
-                  {type.replace('_', ' ')}
-                </button>
-              ))}
+              {Object.values(OrderType).map(type => {
+                const isTargetOccupied = Object.values(state.orders).some(o => o.targetId === state.selectedBlockId && o.status === 'pending');
+                
+                return (
+                  <button 
+                    key={type}
+                    disabled={!state.selectedHoodId || !state.selectedBlockId || isTargetOccupied}
+                    onClick={() => {
+                      const orderId = `order-${Date.now()}`;
+                      const order: Order = {
+                        id: orderId,
+                        type,
+                        targetId: state.selectedBlockId!,
+                        hoodId: state.selectedHoodId!,
+                        status: 'pending'
+                      };
+                      setState(p => {
+                        const nextHoods = { ...p.hoods };
+                        nextHoods[state.selectedHoodId!] = { ...nextHoods[state.selectedHoodId!], status: HoodStatus.ON_ORDER, currentOrderId: orderId };
+                        return { ...p, orders: { ...p.orders, [orderId]: order }, hoods: nextHoods };
+                      });
+                    }}
+                    className="text-[11px] h-10 uppercase font-black border-2 border-black hover:scale-105 active:scale-95 disabled:opacity-20 disabled:grayscale transition-all flex flex-col items-center justify-center shadow-[4px_4px_0px_black] active:shadow-none translate-y-[-2px] active:translate-y-[2px]"
+                    style={{ 
+                      backgroundColor: UI_SETTINGS.ACCENT_GREEN,
+                      color: '#000',
+                    }}
+                  >
+                    <span className="leading-none">{type.replace('_', ' ')}</span>
+                    {isTargetOccupied && <span className="text-[7px] opacity-60">District Occupied</span>}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
