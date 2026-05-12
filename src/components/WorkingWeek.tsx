@@ -34,7 +34,9 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
         const nextHistory = [...prev.history];
         let stateChanged = false;
 
-        Object.values(nextHoods).forEach(hood => {
+        let nextActiveCutscene = prev.activeCutscene;
+
+        for (const hood of Object.values(nextHoods)) {
           if (hood.status === HoodStatus.ON_ORDER && hood.currentOrderId) {
             const order = prev.orders[hood.currentOrderId];
             const targetBlock = prev.city[order.targetId];
@@ -53,7 +55,7 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
               // Resolve Order
               if (order.type === OrderType.EXTORT) {
                 targetBusiness.ownerId = hood.gangId;
-                targetBusiness.racketType = undefined; // Need to setup racket later
+                targetBusiness.racketType = undefined;
                 const msg = `${hood.nickname} successfully extorted ${targetBusiness.name}. It is now under our control.`;
                 nextHistory.push({
                   id: `extort-${Date.now()}`,
@@ -62,18 +64,8 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
                   type: 'crime',
                   timestamp: Date.now()
                 });
-                return { 
-                  ...prev, 
-                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } }, 
-                  businesses: nextBusinesses, 
-                  history: nextHistory,
-                  activeCutscene: {
-                    type: OrderType.EXTORT,
-                    outcome: 'success',
-                    message: msg,
-                    hoodId: hood.id
-                  }
-                };
+                nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                nextActiveCutscene = { type: OrderType.EXTORT, outcome: 'success', message: msg, hoodId: hood.id };
               } else if (order.type === OrderType.OPEN_RACKET) {
                 const racket = ['speakeasy', 'casino', 'loan_sharks'][Math.floor(Math.random() * 3)] as any;
                 targetBusiness.racketType = racket;
@@ -85,75 +77,43 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
                   type: 'profit',
                   timestamp: Date.now()
                 });
-                return { 
-                  ...prev, 
-                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } }, 
-                  businesses: nextBusinesses, 
-                  history: nextHistory,
-                  activeCutscene: {
-                    type: OrderType.OPEN_RACKET,
-                    outcome: 'success',
-                    message: msg,
-                    hoodId: hood.id
-                  }
-                };
+                nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                nextActiveCutscene = { type: OrderType.OPEN_RACKET, outcome: 'success', message: msg, hoodId: hood.id };
               } else if (order.type === OrderType.HIT) {
                 const roll = Math.random();
                 if (roll > 0.4) {
                   const msg = `${hood.nickname} eliminated the target in ${targetBlock.id}. Neutralizing threats for the syndicate.`;
                   nextHistory.push({ id: `hit-${Date.now()}`, turn: prev.turn, message: msg, type: 'crime', timestamp: Date.now() });
-                  return { 
-                    ...prev, 
-                    hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } },
-                    history: nextHistory,
-                    activeCutscene: { type: OrderType.HIT, outcome: 'success', message: msg, hoodId: hood.id }
-                  };
+                  nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                  nextActiveCutscene = { type: OrderType.HIT, outcome: 'success', message: msg, hoodId: hood.id };
                 } else if (roll > 0.1) {
                   const msg = `The hit on ${targetBlock.id} failed. ${hood.nickname} was nearly caught!`;
                   nextHistory.push({ id: `hit-fail-${Date.now()}`, turn: prev.turn, message: msg, type: 'warning', timestamp: Date.now() });
-                  return { 
-                    ...prev, 
-                    hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } },
-                    history: nextHistory,
-                    activeCutscene: { type: OrderType.HIT, outcome: 'failure', message: msg, hoodId: hood.id }
-                  };
+                  nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                  nextActiveCutscene = { type: OrderType.HIT, outcome: 'failure', message: msg, hoodId: hood.id };
                 } else {
                   const msg = `TRAGEDY: ${hood.nickname} was gunned down during the attempt in ${targetBlock.id}.`;
                   nextHistory.push({ id: `death-${Date.now()}`, turn: prev.turn, message: msg, type: 'death', timestamp: Date.now() });
-                  return {
-                    ...prev,
-                    hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.DEAD, currentOrderId: undefined } },
-                    history: nextHistory,
-                    activeCutscene: { type: 'death', outcome: 'failure', message: msg, hoodId: hood.id }
-                  };
+                  nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.DEAD, currentOrderId: undefined };
+                  nextActiveCutscene = { type: 'death', outcome: 'failure', message: msg, hoodId: hood.id };
                 }
               } else if (order.type === OrderType.BOMB) {
                 const msg = `A massive explosion rocked ${targetBusiness.name}! Structural damage confirmed.`;
                 nextHistory.push({ id: `bomb-${Date.now()}`, turn: prev.turn, message: msg, type: 'crime', timestamp: Date.now() });
-                return { 
-                  ...prev, 
-                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } },
-                  history: nextHistory,
-                  activeCutscene: { type: OrderType.BOMB, outcome: 'success', message: msg, hoodId: hood.id }
-                };
+                nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                nextActiveCutscene = { type: OrderType.BOMB, outcome: 'success', message: msg, hoodId: hood.id };
               } else if (order.type === OrderType.SCOUT) {
                 const msg = `${hood.nickname} finished scouting ${targetBlock.id}. Map data updated.`;
                 nextHistory.push({ id: `scout-${Date.now()}`, turn: prev.turn, message: msg, type: 'info', timestamp: Date.now() });
-                return { 
-                  ...prev, 
-                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } },
-                  history: nextHistory,
-                  activeCutscene: { type: OrderType.SCOUT, outcome: 'success', message: msg, hoodId: hood.id }
-                };
+                nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
+                nextActiveCutscene = { type: OrderType.SCOUT, outcome: 'success', message: msg, hoodId: hood.id };
               }
-
-              nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };
             }
           }
-        });
+        }
 
         if (stateChanged) {
-          return { ...prev, hoods: nextHoods, businesses: nextBusinesses, history: nextHistory };
+          return { ...prev, hoods: nextHoods, businesses: nextBusinesses, history: nextHistory, activeCutscene: nextActiveCutscene };
         }
         return prev;
       });
