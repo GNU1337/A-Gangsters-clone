@@ -6,8 +6,9 @@
 import React from 'react';
 import { GameState, OrderType, Order, HoodStatus, Business, CityBlock } from '../game/types';
 import { ATTRIBUTE_LABELS, FRONT_COMPATIBILITY, RACKET_METRICS, UI_SETTINGS } from '../game/constants';
-import { FileText, Users, Newspaper, Briefcase, Map as MapIcon, ChevronRight } from 'lucide-react';
+import { FileText, Users, Newspaper as NewspaperIcon, Briefcase, Map as MapIcon, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import Newspaper from './Newspaper';
 
 interface PlanningPhaseProps {
   state: GameState;
@@ -206,42 +207,8 @@ export default function PlanningPhase({ state, setState }: PlanningPhaseProps) {
 
       {/* Right Sidebar: Newspaper & Reports */}
       <div className="flex flex-col gap-4">
-        {/* Newspaper */}
-        <div className="flex-1 min-h-[40rem] bg-white border-4 border-black flex flex-col p-8 shadow-[20px_20px_40px_rgba(0,0,0,0.5)] relative overflow-hidden transform lg:rotate-[0.5deg]">
-          <div className="border-b-4 border-black text-center pb-4 mb-6">
-             <div style={{ fontSize: UI_SETTINGS.TINY_FONT_SIZE }} className="border-b-2 border-black mb-2 py-1 tracking-[0.2em] font-black opacity-80 uppercase text-black">METROPOLITAN DAILY · EST. 1888</div>
-             <h4 style={{ fontSize: '64px', lineHeight: 0.8 }} className="font-black uppercase italic tracking-tighter font-serif text-black">The Morning Herald</h4>
-             <div style={{ fontSize: UI_SETTINGS.SMALL_FONT_SIZE }} className="flex justify-between font-black border-t-2 border-black mt-2 pt-2 italic text-black">
-              <span>{state.weekDate.toUpperCase()} LATE EDITION</span>
-              <span>VOL. XXXIV · NO. 241</span>
-             </div>
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar-newspaper space-y-6">
-            {events.length > 0 ? (
-              <>
-                <div style={{ fontSize: '32px', lineHeight: 1 }} className="font-black leading-none text-center underline decoration-4 decoration-black underline-offset-4 mb-8 text-black uppercase tracking-tighter">
-                  {events[0].message}
-                </div>
-                <div className="flex flex-col gap-6">
-                  {events.slice(1, 5).map(event => (
-                    <div key={event.id} className="border-b-2 border-black/10 pb-4 last:border-0">
-                      <p style={{ fontSize: UI_SETTINGS.BASE_FONT_SIZE }} className="font-serif leading-tight text-justify text-black font-black italic opacity-90 first-letter:text-6xl first-letter:font-black first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-black">
-                        {event.message}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="opacity-10 flex flex-col items-center justify-center h-full gap-2 grayscale">
-                <Newspaper size={64} strokeWidth={2} className="text-black" />
-                <span className="text-[12px] uppercase font-black tracking-[0.4em] text-black">Scanning Wire...</span>
-              </div>
-            )}
-          </div>
-          <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
-        </div>
-
+        <Newspaper state={state} />
+        
         {/* Diplomacy Ledger */}
         <div className="h-44 bg-[#2b251d] rounded border border-[#4a3d31] p-4 flex flex-col relative overflow-hidden shadow-2xl">
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/dark-wood.png')]"></div>

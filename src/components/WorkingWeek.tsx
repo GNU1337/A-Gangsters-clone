@@ -54,22 +54,49 @@ export default function WorkingWeek({ state, setState, onEndWeek }: WorkingWeekP
               if (order.type === OrderType.EXTORT) {
                 targetBusiness.ownerId = hood.gangId;
                 targetBusiness.racketType = undefined; // Need to setup racket later
+                const msg = `${hood.nickname} successfully extorted ${targetBusiness.name}. It is now under our control.`;
                 nextHistory.push({
                   id: `extort-${Date.now()}`,
                   turn: prev.turn,
-                  message: `${hood.nickname} successfully extorted ${targetBusiness.name}. It is now under our control.`,
-                  type: 'alert',
+                  message: msg,
+                  type: 'crime',
                   timestamp: Date.now()
                 });
+                return { 
+                  ...prev, 
+                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } }, 
+                  businesses: nextBusinesses, 
+                  history: nextHistory,
+                  activeCutscene: {
+                    type: OrderType.EXTORT,
+                    outcome: 'success',
+                    message: msg,
+                    hoodId: hood.id
+                  }
+                };
               } else if (order.type === OrderType.OPEN_RACKET) {
-                targetBusiness.racketType = ['speakeasy', 'casino', 'loan_shark'][Math.floor(Math.random() * 3)] as any;
+                const racket = ['speakeasy', 'casino', 'loan_sharks'][Math.floor(Math.random() * 3)] as any;
+                targetBusiness.racketType = racket;
+                const msg = `${hood.nickname} set up a new illegal ${racket.replace('_', ' ')} in ${targetBusiness.name}.`;
                 nextHistory.push({
                   id: `racket-${Date.now()}`,
                   turn: prev.turn,
-                  message: `${hood.nickname} set up a new illegal racket in ${targetBusiness.name}.`,
-                  type: 'info',
+                  message: msg,
+                  type: 'profit',
                   timestamp: Date.now()
                 });
+                return { 
+                  ...prev, 
+                  hoods: { ...nextHoods, [hood.id]: { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined } }, 
+                  businesses: nextBusinesses, 
+                  history: nextHistory,
+                  activeCutscene: {
+                    type: OrderType.OPEN_RACKET,
+                    outcome: 'success',
+                    message: msg,
+                    hoodId: hood.id
+                  }
+                };
               }
 
               nextHoods[hood.id] = { ...updatedHood, status: HoodStatus.IDLE, currentOrderId: undefined };

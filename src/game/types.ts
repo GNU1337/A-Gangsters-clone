@@ -126,6 +126,8 @@ export interface GameState {
   isPaused: boolean;
   showTutorial: boolean;
   tutorialStep: number;
+  activeCutscene?: ActiveCutscene;
+  lastReport?: EconomicReport;
   history: GameEvent[];
 }
 
@@ -133,6 +135,22 @@ export interface GameEvent {
   id: string;
   turn: number;
   message: string;
-  type: 'info' | 'warning' | 'alert' | 'critical';
+  type: 'info' | 'warning' | 'alert' | 'critical' | 'profit' | 'death' | 'crime';
   timestamp: number;
+}
+
+export interface EconomicReport {
+  grossIncome: number;
+  expenses: number;
+  taxesPaid: number;
+  illegalProfit: number;
+  legalProfit: number;
+  racketBreakdown: Record<string, number>;
+}
+
+export interface ActiveCutscene {
+  type: OrderType | 'death' | 'raid';
+  outcome: 'success' | 'failure' | 'neutral';
+  message: string;
+  hoodId: string;
 }

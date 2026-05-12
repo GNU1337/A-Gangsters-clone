@@ -10,12 +10,15 @@ import { processFBIChecks } from './game/heat';
 import PlanningPhase from './components/PlanningPhase';
 import WorkingWeek from './components/WorkingWeek';
 import TutorialOverlay from './components/TutorialOverlay';
+import GameLog from './components/GameLog';
+import ActionCutscene from './components/ActionCutscene';
 import { UI_SETTINGS } from './game/constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState>(() => generateInitialState());
+  const [showLog, setShowLog] = useState(true);
 
   const playerGang = useMemo(() => {
     return gameState.gangs[gameState.playerGang];
@@ -159,6 +162,32 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {gameState.activeCutscene && (
+          <ActionCutscene 
+            cutscene={gameState.activeCutscene}
+            onComplete={() => setGameState(p => ({ ...p, activeCutscene: undefined }))}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Global Log Toggle */}
+      <div className="fixed bottom-0 right-10 z-50 w-96 transition-all duration-500" style={{ transform: showLog ? 'translateY(0)' : 'translateY(calc(100% - 40px))' }}>
+        <button 
+          onClick={() => setShowLog(!showLog)}
+          className="w-full bg-black h-10 border-x-2 border-t-2 border-white/20 flex items-center justify-between px-4 text-[#d4af37] font-black uppercase tracking-widest text-[10px] hover:bg-[#1a120b] transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
+            Live Syndicate Intelligence
+          </div>
+          {showLog ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+        <div className="h-80">
+          <GameLog events={gameState.history} />
+        </div>
+      </div>
     </div>
   );
 }

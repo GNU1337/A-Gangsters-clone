@@ -138,6 +138,7 @@ export function processWeekEnd(state: GameState): GameState {
   
   let totalLegal = 0;
   let totalIllegal = 0;
+  const racketBreakdown: Record<string, number> = {};
 
   Object.values(nextState.businesses).forEach(b => {
     if (b.ownerId === state.playerGang) {
@@ -145,18 +146,37 @@ export function processWeekEnd(state: GameState): GameState {
       const { legal, illegal } = calculateBusinessIncome(b, block.landValue);
       totalLegal += legal;
       totalIllegal += illegal;
+
+      if (b.racketType) {
+        racketBreakdown[b.racketType] = (racketBreakdown[b.racketType] || 0) + illegal;
+      }
     }
   });
 
-  playerGang.money += totalIllegal;
-  playerGang.legalMoney += totalLegal;
+  const salaryExpenses = Object.values(nextState.hoods)
+    .filter(h => h.gangId === state.playerGang && h.status !== HoodStatus.DEAD)
+    .reduce((sum, h) => sum + h.salary * SIXTY_FOUR_RULE.UNIT, 0);
+
+  const taxes = Math.floor(totalLegal * 0.15); // 15% income tax on legal earnings
+
+  playerGang.money += (totalIllegal - salaryExpenses);
+  playerGang.legalMoney += (totalLegal - taxes);
+
+  nextState.lastReport = {
+    grossIncome: totalLegal + totalIllegal,
+    expenses: salaryExpenses,
+    taxesPaid: taxes,
+    illegalProfit: totalIllegal,
+    legalProfit: totalLegal,
+    racketBreakdown
+  };
   
   nextState.turn += 1;
   nextState.history.push({
     id: `turn-${nextState.turn}`,
     turn: nextState.turn,
-    message: `Week ${state.turn} complete. Net income: $${((totalLegal + totalIllegal) / 64).toLocaleString()}`,
-    type: 'info',
+    message: `Week ${state.turn} complete. Net income: $${((totalLegal + totalIllegal - salaryExpenses - taxes) / 64).toLocaleString()}`,
+    type: 'profit',
     timestamp: Date.now()
   });
 
