@@ -170,6 +170,11 @@ export default function Newspaper({ state }: NewspaperProps) {
         </AnimatePresence>
       </div>
 
+      <div className="mt-4 pt-2 border-t border-black/20 flex justify-between items-center text-[8px] font-black uppercase opacity-40">
+        <span>© 1888 METROPOLITAN DAILY CORP</span>
+        <span className="tracking-widest">WIRELESS: {UI_SETTINGS.APP_URL.replace('https://', '')}</span>
+      </div>
+
       <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
     </div>
   );

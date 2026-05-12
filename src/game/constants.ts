@@ -75,4 +75,5 @@ export const UI_SETTINGS = {
   BG_COLOR_DEEP: '#000000',    // Deeper blacks
   BG_COLOR_PAPER: '#f4ead5',
   FONT_FAMILY: '"Crimson Pro", serif',
+  APP_URL: import.meta.env.VITE_APP_URL || 'https://ais-dev-msrwo6eqpyi3wbxnq6levl-89908173346.europe-west2.run.app',
 };
